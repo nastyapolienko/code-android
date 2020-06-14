@@ -5,21 +5,15 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<Book> fetchBook() async {
-  final response =
-  await http.get('http://192.168.0.108:8080/books/1');
+  var a = index.toString();
+  final response = await http.get('http://192.168.0.5:8080/books/'+a);
 
   if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
     return Book.fromJson(json.decode(response.body));
   } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
     throw Exception('Failed to load a book');
   }
 }
-
-
 
 class DetailPage extends StatelessWidget {
 
@@ -31,17 +25,20 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(book.bookname),
+          title: Text(book.bookname!=null?book.bookname:'The details'),
         ),
         body: Center(
+
           child: FutureBuilder<Book>(
+
             future: fetchBook(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.bookname);
+                return Text(snapshot.data.bookname + "\n" + snapshot.data.year);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
+
 
               // By default, show a loading spinner.
               return CircularProgressIndicator();
@@ -55,13 +52,15 @@ class DetailPage extends StatelessWidget {
 class Book {
   final int id;
   final String bookname;
+  final String year;
 
-  Book({this.id, this.bookname});
+  Book({this.id, this.bookname, this.year});
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
       id: json['id'],
       bookname: json['bookname'],
+      year: json['year'],
     );
   }
 }

@@ -32,25 +32,15 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Future<List<Book>> _getBooks() async {
-
-    var data = await http.get("http://192.168.0.108:8080/books");
-
+    var data = await http.get("http://192.168.0.5:8080/books");
     var jsonData = json.decode(data.body);
-
     List<Book> books = [];
-
     for(var u in jsonData){
-
       Book book = Book();
-
       books.add(book);
-
     }
-
     print(books.length);
-
     return books;
-
   }
 
   @override
@@ -74,10 +64,12 @@ class _MyHomePageState extends State<MyHomePage> {
               return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(snapshot.data[index].bookname),
-                    onTap: (){
 
+//                  var a = index.toString();
+
+                  return ListTile(
+                    title: Text(snapshot.data[index].bookname!=null?snapshot.data[index].bookname:'There is null'),
+                    onTap: (){
                       Navigator.push(context,
                           new MaterialPageRoute(builder: (context) => DetailPage(snapshot.data[index]))
                       );
