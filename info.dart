@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<Book> fetchBook() async {
-  //var a = index.toString();
-  final response = await http.get('http://192.168.0.5:8080/books/1');
-
+Future<Book> fetchBook(index) async {
+  index++;
+  var a = index.toString();
+  final response = await http.get('http://192.168.0.5:8080/books/' + a);
   if (response.statusCode == 200) {
     return Book.fromJson(json.decode(response.body));
   } else {
@@ -18,23 +18,24 @@ Future<Book> fetchBook() async {
 class DetailPage extends StatelessWidget {
 
   final Book book;
-  DetailPage(this.book);
+  final int index;
+  DetailPage(this.book, this.index);
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(book.bookname!=null?book.bookname:'The details'),
+          title: Text("book.name"),
         ),
         body: Center(
 
           child: FutureBuilder<Book>(
 
-            future: fetchBook(),
+            future: fetchBook(index),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.bookname + "\n" + snapshot.data.year);
+                return Text(snapshot.data.name + "\n" + snapshot.data.year);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -51,15 +52,15 @@ class DetailPage extends StatelessWidget {
 
 class Book {
   final int id;
-  final String bookname;
+  final String name;
   final String year;
 
-  Book({this.id, this.bookname, this.year});
+  Book({this.id, this.name, this.year});
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
-      id: json['id'],
-      bookname: json['bookname'],
+      id: json['bid'],
+      name: json['bookname'],
       year: json['year'],
     );
   }

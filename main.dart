@@ -64,14 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
               return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-
-//                  var a = index.toString();
-
                   return ListTile(
-                    title: Text(snapshot.data[index].bookname!=null?snapshot.data[index].bookname:'There is null'),
+                    title: Text(snapshot.data[index].name!=null?snapshot.data[index].name:'There is null'),
                     onTap: (){
-                      Navigator.push(context,
-                          new MaterialPageRoute(builder: (context) => DetailPage(snapshot.data[index]))
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                          builder: (context) => DetailPage(
+                          snapshot.data[index].name, index
+                          ))
                       );
                     },
                   );
