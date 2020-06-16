@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:fetchlist/info.dart';
+import 'package:fetchlist/create.dart';
 
 void main() => runApp(new MyApp());
 
@@ -19,7 +20,6 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -35,10 +35,12 @@ class _MyHomePageState extends State<MyHomePage> {
     var data = await http.get("http://192.168.0.5:8080/books");
     var jsonData = json.decode(data.body);
     List<Book> books = [];
+
     for(var u in jsonData){
       Book book = Book();
       books.add(book);
     }
+
     print(books.length);
     return books;
   }
@@ -46,14 +48,27 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: (){
+          Navigator.push(
+              context,
+              new MaterialPageRoute(
+                  builder: (context) => CreateBook())
+          );
+        },
+      ),
       appBar: new AppBar(
         title: new Text(widget.title),
       ),
       body: Container(
+
         child: FutureBuilder(
           future: _getBooks(),
           builder: (BuildContext context, AsyncSnapshot snapshot){
+            print("snapshot data");
             print(snapshot.data);
+
             if(snapshot.data == null){
               return Container(
                   child: Center(
@@ -65,13 +80,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    title: Text(snapshot.data[index].name!=null?snapshot.data[index].name:'There is null'),
+                    title: Text(snapshot.data[index].name!=null?snapshot.data[index].bookname:'There is null'),
                     onTap: (){
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
                           builder: (context) => DetailPage(
-                          snapshot.data[index].name, index
+                          snapshot.data[index].bookname, index
                           ))
                       );
                     },

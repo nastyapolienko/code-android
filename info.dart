@@ -26,7 +26,7 @@ class DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("book.name"),
+          title: Text("book.bookname"),
         ),
         body: Center(
 
@@ -35,7 +35,7 @@ class DetailPage extends StatelessWidget {
             future: fetchBook(index),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(snapshot.data.name + "\n" + snapshot.data.year);
+                return Text(snapshot.data.bookname + "\n" + snapshot.data.year);
               } else if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
@@ -52,15 +52,15 @@ class DetailPage extends StatelessWidget {
 
 class Book {
   final int id;
-  final String name;
+  final String bookname;
   final String year;
 
-  Book({this.id, this.name, this.year});
+  Book({this.id, this.bookname, this.year});
 
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
       id: json['bid'],
-      name: json['bookname'],
+      bookname: json['bookname'],
       year: json['year'],
     );
   }
